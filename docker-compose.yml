@@ -1,0 +1,37 @@
+version: "2"
+
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: new-mysql
+    command: --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci
+    restart: always
+    privileged: true
+    environment:
+      MYSQL_USER: demo
+      MYSQL_PASSWORD: demo
+      MYSQL_ROOT_PASSWORD: 123456
+    volumes:
+      - ~/mysql_home/conf:/etc/mysql/conf.d
+      - ~/mysql_home/data:/var/lib/mysql
+      - ~/mysql_home/logs:/logs
+      - ~/mysql_home/cache:/tmp/cache
+    ports:
+      - 3306:3306
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: new-phpmyadmin
+    restart: always
+    environment:
+      - MYSQL_USER=demo
+      - MYSQL_PASSWORD=demo
+      - MYSQL_ROOT_PASSWORD=123456
+    volumes:
+      - ~/phpmyadmin_home/sessions:/sessions
+    ports:
+      - 8000:80
+    links:
+      - mysql:db
+ 
